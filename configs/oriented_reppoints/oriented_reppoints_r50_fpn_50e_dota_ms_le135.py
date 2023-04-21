@@ -31,3 +31,15 @@ lr_config = dict(
     step=[24, 32, 38])
 runner = dict(type='EpochBasedRunner', max_epochs=50)
 checkpoint_config = dict(interval=2)
+
+
+model = dict(
+    type='RotatedRepPoints',
+    bbox_head=dict(
+        type='OrientedRepPointsHead',
+        num_classes=15,
+        in_channels=256,
+        feat_channels=256,
+        point_feat_channels=256,
+        stacked_convs=3,
+        num_points=9))

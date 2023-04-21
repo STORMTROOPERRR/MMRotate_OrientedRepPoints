@@ -455,16 +455,11 @@ def obb2poly_le135(rboxes):
     N = rboxes.shape[0]
     if N == 0:
         return rboxes.new_zeros((rboxes.size(0), 8))
-    x_ctr, y_ctr, width, height, angle = rboxes.select(1, 0), rboxes.select(
-        1, 1), rboxes.select(1, 2), rboxes.select(1, 3), rboxes.select(1, 4)
-    tl_x, tl_y, br_x, br_y = \
-        -width * 0.5, -height * 0.5, \
-        width * 0.5, height * 0.5
-    rects = torch.stack([tl_x, br_x, br_x, tl_x, tl_y, tl_y, br_y, br_y],
-                        dim=0).reshape(2, 4, N).permute(2, 0, 1)
+    x_ctr, y_ctr, width, height, angle = rboxes.select(1, 0), rboxes.select(1, 1), rboxes.select(1, 2), rboxes.select(1, 3), rboxes.select(1, 4)
+    tl_x, tl_y, br_x, br_y = -width * 0.5, -height * 0.5, width * 0.5, height * 0.5
+    rects = torch.stack([tl_x, br_x, br_x, tl_x, tl_y, tl_y, br_y, br_y], dim=0).reshape(2, 4, N).permute(2, 0, 1)
     sin, cos = torch.sin(angle), torch.cos(angle)
-    M = torch.stack([cos, -sin, sin, cos], dim=0).reshape(2, 2,
-                                                          N).permute(2, 0, 1)
+    M = torch.stack([cos, -sin, sin, cos], dim=0).reshape(2, 2, N).permute(2, 0, 1)
     polys = M.matmul(rects).permute(2, 1, 0).reshape(-1, N).transpose(1, 0)
     polys[:, ::2] += x_ctr.unsqueeze(1)
     polys[:, 1::2] += y_ctr.unsqueeze(1)
@@ -485,14 +480,10 @@ def obb2poly_le90(rboxes):
         return rboxes.new_zeros((rboxes.size(0), 8))
     x_ctr, y_ctr, width, height, angle = rboxes.select(1, 0), rboxes.select(
         1, 1), rboxes.select(1, 2), rboxes.select(1, 3), rboxes.select(1, 4)
-    tl_x, tl_y, br_x, br_y = \
-        -width * 0.5, -height * 0.5, \
-        width * 0.5, height * 0.5
-    rects = torch.stack([tl_x, br_x, br_x, tl_x, tl_y, tl_y, br_y, br_y],
-                        dim=0).reshape(2, 4, N).permute(2, 0, 1)
+    tl_x, tl_y, br_x, br_y = -width * 0.5, -height * 0.5, width * 0.5, height * 0.5
+    rects = torch.stack([tl_x, br_x, br_x, tl_x, tl_y, tl_y, br_y, br_y], dim=0).reshape(2, 4, N).permute(2, 0, 1)
     sin, cos = torch.sin(angle), torch.cos(angle)
-    M = torch.stack([cos, -sin, sin, cos], dim=0).reshape(2, 2,
-                                                          N).permute(2, 0, 1)
+    M = torch.stack([cos, -sin, sin, cos], dim=0).reshape(2, 2, N).permute(2, 0, 1)
     polys = M.matmul(rects).permute(2, 1, 0).reshape(-1, N).transpose(1, 0)
     polys[:, ::2] += x_ctr.unsqueeze(1)
     polys[:, 1::2] += y_ctr.unsqueeze(1)

@@ -35,7 +35,6 @@ class ConvexGIoULossFuction(Function):
         """
         ctx.save_for_backward(pred)
         convex_gious, grad = convex_giou(pred, target)
-
         loss = 1 - convex_gious
         if weight is not None:
             loss = loss * weight
